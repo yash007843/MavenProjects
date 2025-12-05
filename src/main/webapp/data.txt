@@ -1,0 +1,2 @@
+Hello! This data was loaded asynchronously using AJAX. 
+No page refresh was needed.

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DHTML Excercise</title>
+    <style>
+          body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(green, rgb(231, 211, 95), rgb(55, 160, 181));
+            margin: 30px;
+            text-align: center;
+        }
+        #colorbox {
+            width: 100px;
+            height: 100px;
+            background-color: rgb(255, 234, 0);
+            margin: 20px auto;
+            transition: 0.3s;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            background: linear-gradient(rgb(208, 135, 135), rgb(237, 15, 15), gold);
+            color: rgb(0, 0, 0);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #movingbox {
+            width: 100px;
+            height: 100px;
+            background-color: black;
+            margin: 10px auto;
+            position: relative;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <h2>Color Box</h2>
+    <div id="colorbox"></div>
+    <div>
+        <button onclick="changecolor()">Change Color</button>
+        <button onclick="resetcolor()">Reset Color</button>
+    </div>
+
+    <h2>Moving Box</h2>
+    <div id="movingbox"></div>
+    <div>
+        <button onclick="MoveLeft()">Move Left</button>
+        <button onclick="MoveRight()">Move Right</button>
+    </div>
+
+    <h2>Add and Remove Items</h2>
+    <div>
+        <button onclick="AddItem()">Add Item</button>
+        <button onclick="RemoveItem()">Remove Item</button>
+    </div>
+    <ul id="itemlist" style="text-align: center; list-style: none; padding: 0;">List of Items are shown below.</ul>
+    <script>
+        function changecolor() {
+            const box = document.getElementById("colorbox");
+            box.style.backgroundColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+        }
+        function resetcolor() {
+            document.getElementById("colorbox").style.backgroundColor = "violet";
+        }
+
+        function MoveLeft() {
+            const box = document.getElementById("movingbox");
+            box.style.left = parseInt(box.style.left || 0) - 50 + 'px';
+        }
+        function MoveRight() {
+            const box = document.getElementById("movingbox");
+            box.style.left = parseInt(box.style.left || 0) + 50 + 'px';
+        }
+
+        let count = 0;
+        function AddItem() {
+            count++;
+            const li = document.createElement("li");
+            li.textContent = "Item" + count;
+            document.getElementById("itemlist").appendChild(li);
+        }
+        function RemoveItem() {
+            const list = document.getElementById("itemlist");
+            if(list.lastChild) list.removeChild(list.lastChild); 
+        }
+    </script>
+</body>
+</html>

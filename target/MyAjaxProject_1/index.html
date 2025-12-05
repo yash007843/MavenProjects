@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajax -> Servlet</title>
+    <style>
+  body {
+      text-align: center;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: medium;
+  }
+  button {
+      margin: 8px auto;
+      margin-top: 8px;
+      margin-right: -35px;
+      margin-left: 35px;
+  }
+  #status {
+      margin: 5px;
+      margin-left: 20px;
+      color: rgb(16, 203, 103);
+  }
+
+  /* NEW: table styling */
+  table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      min-width: 400px;
+  }
+  th, td {
+      border: 1px solid #000;
+      padding: 6px 12px;
+      text-align: left;
+  }
+  th {
+      background-color: #f0f0f0;
+  }
+</style>
+</head>
+<body>
+    <h3>Ajax call data from servlet</h3>
+    <div>
+        <label for="typeselect">category :</label>
+        <select id="typeselect">
+            <option value="androidmobiles">Android Mobiles</option>
+            <option value="laptop">Laptop</option>
+            <option value="appleproducts">Apple Products</option>
+        </select>
+    </div>
+    <button id="loadbtn">Get Data</button>
+    <button id="resetbtn">Reset</button>
+    <div id="status">Press "Get Data" to fetch JSON from the servlet.</div>
+    <div id="tablecontainer"></div>
+    <script>
+    function createtable(items) {
+        if (!Array.isArray(items) || items.length === 0) {
+            return "<p>There is no items to show.</p>";
+        }
+        const keys = Object.keys(items[0]);
+        let html = "<table><thead><tr>";
+        for (const k of keys) html += `<th>${k}</th>`;
+        html += "</tr></thead><tbody>";
+        for (const it of items) {
+            html += "<tr>";
+            for (const k of keys) html += `<td>${String(it[k] ?? '')}</td>`;
+            html += "</tr>";
+        }
+        html += "</tbody></table>";
+        return html;
+    }
+
+    const loadbtn = document.getElementById("loadbtn");
+    const resetbtn = document.getElementById("resetbtn");
+    const status = document.getElementById("status");
+    const container = document.getElementById("tablecontainer");
+    const typeselect = document.getElementById("typeselect");
+
+    async function LoadData() {
+        const type = typeselect.value;  // "androidmobiles" | "laptop" | "appleproducts"
+        status.textContent = "Loading...";
+        status.classList.remove("error");
+        container.innerHTML = "";
+
+        const url = window.location.origin + "/MyAjaxProject_1/api/data?type=" + encodeURIComponent(type);
+        try {
+            const resp = await fetch(url, { method: "GET", headers: { "Accept": "application/json" } });
+            if (!resp.ok) {
+                throw new Error("server returned " + resp.status + " " + resp.statusText);
+            }
+            const data = await resp.json();
+            const items = data.items ?? data[type] ?? [];
+            container.innerHTML = createtable(items);
+            status.textContent = `Loaded ${items.length} ${type}.`;
+        } catch (err) {
+            status.textContent = "Error loading data: " + err.message;
+            status.classList.add("error");
+        }
+    }
+
+    loadbtn.addEventListener("click", LoadData);
+    resetbtn.addEventListener("click", () => {
+        container.innerHTML = "";
+        status.textContent = "Cleared.";
+        status.classList.remove("error");
+    });
+</script>
+</body>
+</html>
