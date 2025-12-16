@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marksheet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+    <div class="d-flex justify-content-center align-items-start vh-100 mt-4 pt-5">
+<div class="d-flex flex-column justify-content-start align-items-center vh-100 mt-4 pt-5">
+
+  <!-- Role Select -->
+  <div class="mb-3" style="width: 300px;">
+    <label for="roleSelect" class="form-label">Login As :</label>
+    <select id="roleSelect" class="form-control">
+      <option value="student" selected>Student</option>
+      <option value="admin">Admin</option>
+    </select>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-start">
+    <!-- Student Login Card -->
+    <div id="studentCard" class="card text-bg-success me-0" style="width: 300px;">
+      <div class="card-header text-center" style="font-family:'Times New Roman', Times, serif;">
+        Student Login Form
+      </div>
+
+      <div class="card-body">
+        <form action="login" method="POST" onsubmit="return validateForm(event)">
+          <!-- Register Number -->
+          <label for="registernumber" class="form-label mb-1">Register Number :</label>
+          <input type="text" id="registernumber" name="registernumber" class="form-control mb-1">
+          <small id="regError" class="text-danger d-block mb-1"></small>
+
+          <!-- Password -->
+          <label for="password" class="form-label mt-2 mb-1">Password :</label>
+          <input type="password" id="password" name="password" class="form-control mb-1">
+          <small id="passError" class="text-danger"></small>
+
+          <!-- Remember me -->
+          <div class="form-check mt-2 mb-2">
+            <input type="checkbox" class="form-check-input" id="rememberMe">
+            <label for="rememberMe" class="form-check-label">Remember me</label>
+          </div>
+
+          <!-- Student Login Button -->
+          <button type="submit" name="role" value="student" class="btn btn-primary w-100 mb-2">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Admin Login Card -->
+    <div id="adminCard" class="card text-bg-success" style="width: 300px; display: none;">
+      <div class="card-header text-center" style="font-family:'Times New Roman', Times, serif;">
+        Admin Login Form
+      </div>
+
+      <div class="card-body">
+        <form action="login" method="POST" onsubmit="return validateForm(event)">
+          <!-- Admin ID -->
+          <label for="adminid" class="form-label mb-1">Admin ID :</label>
+          <input type="text" id="adminid" name="adminid" class="form-control mb-1">
+          <small id="adminIdError" class="text-danger d-block mb-1"></small>
+
+          <!-- Password -->
+          <label for="adminPassword" class="form-label mt-2 mb-1">Password :</label>
+          <input type="password" id="adminPassword" name="adminPassword" class="form-control mb-1">
+          <small id="adminPassError" class="text-danger"></small>
+
+          <!-- Remember me -->
+          <div class="form-check mt-2 mb-2">
+            <input type="checkbox" class="form-check-input" id="rememberMeAdmin">
+            <label for="rememberMeAdmin" class="form-check-label">Remember me</label>
+          </div>
+
+          <!-- Admin Login Button -->
+          <button type="submit" name="role" value="admin" class="btn btn-primary w-100 mb-2">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function validateForm(event) {
+  const regInput = document.getElementById('registernumber');
+  const passInput = document.getElementById('password');
+  const regError = document.getElementById('regError');
+  const passError = document.getElementById('passError');
+
+  regError.textContent = "";
+  passError.textContent = "";
+
+  let isValid = true;
+
+  const regValue = regInput.value.trim();
+  if (regValue === "") {
+    regError.textContent = "Register number is required";
+    isValid = false;
+  } else {
+    const regPattern = /^[0-9]{6}[A-Za-z]{2}[0-9]{3}$/; // 713521AM060 pattern
+    if (!regPattern.test(regValue)) {
+      regError.textContent = "Enter a valid 11-character register number";
+      isValid = false;
+    }
+  }
+
+  const passValue = passInput.value.trim();
+  if (passValue === "") {
+    passError.textContent = "Password is required";
+    isValid = false;
+  } else if (passValue.length < 6) {
+    passError.textContent = "Password must be at least 6 characters";
+    isValid = false;
+  }
+
+  if (!isValid) {
+    event.preventDefault();   // ❗ only block when invalid
+  }
+  return isValid;             // allow submit when true
+}
+
+  const roleSelect = document.getElementById('roleSelect');
+  const studentCard = document.getElementById('studentCard');
+  const adminCard = document.getElementById('adminCard');
+
+  roleSelect.addEventListener('change', function () {
+    if (this.value === 'student') {
+      studentCard.style.display = 'block';
+      adminCard.style.display = 'none';
+    } else if (this.value === 'admin') {
+      studentCard.style.display = 'none';
+      adminCard.style.display = 'block';
+    }
+  });
+
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
